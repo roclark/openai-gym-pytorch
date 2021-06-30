@@ -1,0 +1,41 @@
+# This workflow ensures no destructive changes made to the application which would
+# prevent the model from learning Pong. The latest trained model is used and should
+# get a score of at least 19 in Pong for a single episode.
+name: Pong Retraining Sanity Test
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.7, 3.8, 3.9]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Lint with pycodestyle
+      run: |
+        python -m pip install pycodestyle
+        pycodestyle core *.py
+    - name: Test transfer learning
+      run: |
+        python train.py --environment PongNoFrameskip-v4 --num-episodes 1 --checkpoint PongNoFrameskip-v4.dat --epsilon-start 0.0 > results.txt
+        result=`grep "Best:" results.txt | awk '{print $7}' | cut -d "." -f1`
+        echo "Result: $result"
+        if [ $result -lt 19 ]; then
+          echo "Result was below threshold. Marking failed."
+          exit -1
+        else
+          echo "Result above threshold. Marking passed."
+        fi
