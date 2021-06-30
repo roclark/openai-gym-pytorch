@@ -53,11 +53,20 @@ def set_device(force_cpu):
     return device
 
 
-def initialize_models(env, device):
+def load_model(checkpoint, model, target_model, device):
+    model.load_state_dict(torch.load(checkpoint, map_location=device))
+    target_model.load_state_dict(model.state_dict())
+    return model, target_model
+
+
+def initialize_models(env, device, checkpoint):
     model = CNNDQN(env.observation_space.shape,
                    env.action_space.n).to(device)
     target_model = CNNDQN(env.observation_space.shape,
                           env.action_space.n).to(device)
+    if checkpoint:
+        model, target_model = load_model(checkpoint, model, target_model,
+                                         device)
     return model, target_model
 
 
