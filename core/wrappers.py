@@ -121,7 +121,7 @@ class ImageToPyTorch(ObservationWrapper):
 class NormalizeFloats(ObservationWrapper):
     def observation(self, obs):
         return np.array(obs).astype(np.float32) / 255.0
-        
+
 
 def wrap_environment(environment):
     env = make(environment)
