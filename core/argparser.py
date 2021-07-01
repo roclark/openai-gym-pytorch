@@ -22,6 +22,9 @@ def parse_args():
     parser.add_argument('--buffer-capacity', type=int, help='The capacity to '
                         'use in the experience replay buffer. Default: %s'
                         % MEMORY_CAPACITY, default=MEMORY_CAPACITY)
+    parser.add_argument('--checkpoint', type=str, help='Specify a .dat file '
+                        'to be used as a checkpoint to initialize weights for '
+                        'a new training run. Defaults to no checkpoint.')
     parser.add_argument('--environment', type=str, help='The OpenAI gym '
                         'environment to use. Default: %s' % ENVIRONMENT,
                         default=ENVIRONMENT)

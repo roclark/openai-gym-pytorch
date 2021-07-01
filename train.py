@@ -70,7 +70,7 @@ def main():
     args = parse_args()
     env = wrap_environment(args.environment)
     device = set_device(args.force_cpu)
-    model, target_model = initialize_models(env, device)
+    model, target_model = initialize_models(env, device, args.checkpoint)
     optimizer = Adam(model.parameters(), lr=args.learning_rate)
     replay_buffer = ReplayBuffer(args.buffer_capacity)
     train(env, model, target_model, optimizer, replay_buffer, args, device)
