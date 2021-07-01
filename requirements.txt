@@ -1,6 +1,6 @@
 atari-py==0.2.6
 cloudpickle==1.2.1
-future==0.17.1
+future==0.18.2
 gym==0.14.0
 numpy==1.21.0
 opencv-python==4.5.2.54
