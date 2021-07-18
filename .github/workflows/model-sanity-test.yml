@@ -30,7 +30,7 @@ jobs:
         pycodestyle core *.py
     - name: Test transfer learning
       run: |
-        python train.py --environment PongNoFrameskip-v4 --num-episodes 1 --checkpoint PongNoFrameskip-v4.dat --epsilon-start 0.0 > results.txt
+        python train.py --environment PongNoFrameskip-v4 --num-episodes 1 --checkpoint models/PongNoFrameskip-v4.dat --epsilon-start 0.0 > results.txt
         result=`grep "Best:" results.txt | awk '{print $7}' | cut -d "." -f1`
         echo "Result: $result"
         if [ $result -lt 19 ]; then

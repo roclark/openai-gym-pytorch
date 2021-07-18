@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from collections import deque
 from core.helpers import is_atari
-from gym import make, ObservationWrapper, Wrapper
+from gym import make, ObservationWrapper, wrappers, Wrapper
 from gym.spaces import Box
 
 
@@ -123,7 +123,7 @@ class NormalizeFloats(ObservationWrapper):
         return np.array(obs).astype(np.float32) / 255.0
 
 
-def wrap_environment(environment):
+def wrap_environment(environment, monitor=False):
     env = make(environment)
     atari = is_atari(environment)
     env = ClassicControl(env, atari)
@@ -141,4 +141,6 @@ def wrap_environment(environment):
     env = ImageToPyTorch(env)
     env = FrameBuffer(env, 4)
     env = NormalizeFloats(env)
+    if monitor:
+        env = wrappers.Monitor(env, 'videos', force=True)
     return env
