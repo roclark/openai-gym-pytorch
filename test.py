@@ -1,5 +1,6 @@
 from argparse import ArgumentParser
-from core.helpers import (initialize_models,
+from core.agents import models
+from core.helpers import (initialize_model_with_target,
                           set_device)
 from core.wrappers import wrap_environment
 
@@ -21,7 +22,9 @@ def main():
     args = parse_args()
     env = wrap_environment(args.environment, monitor=True)
     device = set_device(args.force_cpu)
-    model, target_model = initialize_models(env, device, args.checkpoint)
+    model, target_model = initialize_model_with_target(env, device,
+                                                       args.checkpoint,
+                                                       models['dqn'])
 
     done = False
     state = env.reset()

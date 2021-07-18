@@ -1,5 +1,6 @@
 from argparse import ArgumentParser
 
+from core.agents import models
 from core.constants import (BATCH_SIZE,
                             ENVIRONMENT,
                             EPSILON_START,
@@ -9,6 +10,7 @@ from core.constants import (BATCH_SIZE,
                             INITIAL_LEARNING,
                             LEARNING_RATE,
                             MEMORY_CAPACITY,
+                            MODEL,
                             NUM_EPISODES,
                             TARGET_UPDATE_FREQUENCY)
 from core.helpers import Range
@@ -57,6 +59,9 @@ def parse_args():
                         'iterations to explore prior to updating the model '
                         'and begin the learning process. Default: %s'
                         % INITIAL_LEARNING, default=INITIAL_LEARNING)
+    parser.add_argument('--model', type=str, help='The model to use for '
+                        f'training. Default: {MODEL}', default=MODEL,
+                        choices=models.keys())
     parser.add_argument('--learning-rate', type=float, help='The learning '
                         'rate to use for the optimizer. Default: %s'
                         % LEARNING_RATE, default=LEARNING_RATE)

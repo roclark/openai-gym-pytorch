@@ -3,7 +3,7 @@ import math
 import numpy as np
 import re
 import torch
-from .model import CNNDQN
+from .agents.dqn import CNNDQN
 from torch import FloatTensor, LongTensor
 from torch.autograd import Variable
 
@@ -53,21 +53,31 @@ def set_device(force_cpu):
     return device
 
 
-def load_model(checkpoint, model, target_model, device):
+def load_model(checkpoint, device, model, target_model=None):
     model.load_state_dict(torch.load(checkpoint, map_location=device))
-    target_model.load_state_dict(model.state_dict())
-    return model, target_model
+    if target_model:
+        target_model.load_state_dict(model.state_dict())
+        return model, target_model
+    return model
 
 
-def initialize_models(env, device, checkpoint):
-    model = CNNDQN(env.observation_space.shape,
-                   env.action_space.n).to(device)
-    target_model = CNNDQN(env.observation_space.shape,
-                          env.action_space.n).to(device)
+def initialize_model_with_target(env, device, checkpoint, model_ref):
+    model = model_ref(env.observation_space.shape,
+                      env.action_space.n).to(device)
+    target_model = model_ref(env.observation_space.shape,
+                             env.action_space.n).to(device)
     if checkpoint:
-        model, target_model = load_model(checkpoint, model, target_model,
-                                         device)
+        model, target_model = load_model(checkpoint, device, model,
+                                         target_model)
     return model, target_model
+
+
+def initialize_model(env, device, checkpoint, model_ref):
+    model = model_ref(env.observation_space.shape,
+                      env.action_space.n).to(device)
+    if checkpoint:
+        model = load_model(checkpoint, device, model)
+    return model
 
 
 def camel_to_snake_case(string):
