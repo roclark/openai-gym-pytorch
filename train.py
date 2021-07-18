@@ -42,7 +42,7 @@ def run_episode(env, model, target_model, optimizer, replay_buffer, args,
 
     while True:
         epsilon = update_epsilon(info.index, args)
-        action = model.act(state, epsilon, device)
+        action = model.act(state, device, epsilon)
         if args.render:
             env.render()
         next_state, reward, done, _ = env.step(action)

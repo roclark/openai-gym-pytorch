@@ -1,4 +1,8 @@
 # OpenAI Gym PyTorch
+<p align="center">
+  <img src="media/pongnoframeskip-v4.gif">
+</p>
+
 OpenAI's Gym is an open source toolkit containing several environments which can
 be used to compare reinforcement learning algorithms and techniques in a
 consistent and repeatable manner, easily allowing developers to benchmark their

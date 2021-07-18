@@ -35,7 +35,7 @@ class CNNDQN(nn.Module):
         x = self.features(torch.zeros(1, *self._input_shape))
         return x.view(1, -1).size(1)
 
-    def act(self, state, epsilon, device):
+    def act(self, state, device, epsilon=0.0):
         if random() > epsilon:
             state = torch.FloatTensor(np.float32(state)) \
                 .unsqueeze(0).to(device)
