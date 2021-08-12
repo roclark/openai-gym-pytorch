@@ -12,6 +12,7 @@ from core.constants import (BATCH_SIZE,
                             MEMORY_CAPACITY,
                             MODEL,
                             NUM_EPISODES,
+                            NUM_PROCESSES,
                             TARGET_UPDATE_FREQUENCY)
 from core.helpers import Range
 
@@ -52,9 +53,8 @@ def parse_args():
                         'on the CPU if no supported GPUs are found. Default: '
                         'False')
     parser.add_argument('--gamma', type=float, help='Specify the discount '
-                        'factor, gamma, to use in the Q-table formula. '
-                        'Default: %s' % GAMMA, choices=[Range(0.0, 1.0)],
-                        default=GAMMA, metavar='GAMMA')
+                        'factor, gamma, to use in the Q-table formula. ',
+                        choices=[Range(0.0, 1.0)], metavar='GAMMA')
     parser.add_argument('--initial-learning', type=int, help='The number of '
                         'iterations to explore prior to updating the model '
                         'and begin the learning process. Default: %s'
@@ -68,6 +68,8 @@ def parse_args():
     parser.add_argument('--num-episodes', type=int, help='The number of '
                         'episodes to run in the given environment. Default: '
                         '%s' % NUM_EPISODES, default=NUM_EPISODES)
+    parser.add_argument('--num-processes', type=int, help='The number of '
+                        'training processes to run in parallel.')
     parser.add_argument('--render', action='store_true', help='Specify to '
                         'render a visualization in another window of the '
                         'learning process. Note that a Desktop Environment is '

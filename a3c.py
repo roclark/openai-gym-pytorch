@@ -12,6 +12,7 @@ from core.replay_buffer import ReplayBuffer
 from core.train_information import TrainInformation
 from core.wrappers import wrap_environment
 
+import os
 import torch
 import torch.multiprocessing as _mp
 from torch.distributions import Categorical
@@ -167,7 +168,7 @@ def test_loop(env, model, global_model, state, done, args, info,
 
 
 def test(env, global_model, model_ref, device, args):
-    torch.manual_seed(123 + vars(args).get('num_processes', 1))
+    torch.manual_seed(123 + args.num_processes)
     info = TrainInformation()
     env = wrap_environment(args.environment)
     model = initialize_model(env, device, args.checkpoint, model_ref)
@@ -186,7 +187,8 @@ def test(env, global_model, model_ref, device, args):
 
 def merge_settings(args, settings):
     for setting, value in settings.items():
-        setattr(args, setting, value)
+        if getattr(args, setting, None) is None:
+            setattr(args, setting, value)
     return args
 
 
@@ -213,7 +215,7 @@ def main():
 
     processes = []
 
-    for rank in range(vars(args).get('num_processes', 1)):
+    for rank in range(args.num_processes):
         process = mp.Process(target=train, args=(rank, model, optimizer, model_ref, device, args))
         process.start()
         processes.append(process)
@@ -228,4 +230,5 @@ def main():
 
 
 if __name__ == '__main__':
+    os.environ['OMP_NUM_THREADS'] = '1'
     main()
